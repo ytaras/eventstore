@@ -1,8 +1,12 @@
-module Data.Stream (Stream) where
+module Data.Stream ( Stream
+                   , StreamAction
+                   , createStream
+                   , foldStream
+                   )
+where       
 
 import Data.Event
 import Data.Foldable
-import Control.Applicative ((<$>), (<*>))
 
 data StreamAction a = StreamAction { runAction :: IO a }
 
@@ -15,3 +19,7 @@ data Stream event = Stream { events :: [Event event] }
 
 createStream :: EventPersistable a => String -> Event a -> StreamAction (Stream a)
 createStream name e = return $ Stream [e]
+
+foldStream :: (b -> Event a -> b) -> b -> Stream a -> StreamAction b
+foldStream f a = return . foldl' f a . events
+

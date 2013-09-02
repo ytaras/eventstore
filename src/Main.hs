@@ -4,5 +4,5 @@ module Main where
 
 -- | The main entry point.
 main :: IO ()
-main = do
+main = 
   putStrLn "Welcome to the FP Haskell Center!"
