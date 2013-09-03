@@ -1,7 +1,9 @@
 module Data.Stream ( Stream
                    , StreamAction
+                   , runAction
                    , createStream
                    , foldStream
+                   , lift
                    )
 where       
 
@@ -15,11 +17,13 @@ instance Monad StreamAction where
     StreamAction v >>= f =
         StreamAction $ v >>= (runAction . f)
       
-data Stream event = Stream { events :: [Event event] } 
+data Stream event = Stream { events :: [Event event] } deriving Show
 
-createStream :: EventPersistable a => String -> Event a -> StreamAction (Stream a)
-createStream name e = return $ Stream [e]
+createStream :: EventPersistable a => String -> a -> StreamAction (Stream a)
+createStream name e = return $ Stream [createEvent e]
 
 foldStream :: (b -> Event a -> b) -> b -> Stream a -> StreamAction b
 foldStream f a = return . foldl' f a . events
 
+lift :: (b -> a -> b) -> b -> Event a -> b
+lift f b = f b . getData
