@@ -7,15 +7,15 @@ import Data.Event
 
 -- | The main entry point.
 main :: IO ()
-main = 
-   return "Hello" >>= print
+main = print "Hello"
   
 
 data CounterEvent = CounterAdded Int | CounterReset deriving Show
 newtype CounterState = CounterState Int deriving Show
 
-instance EventPersistable CounterEvent
-    
+instance EventPersistable CounterEvent where
+    hole = undefined
+
 counter :: CounterState -> CounterEvent -> CounterState
 counter _ CounterReset = CounterState 0
 counter (CounterState b) (CounterAdded a) = CounterState $ a + b
