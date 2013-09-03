@@ -13,5 +13,5 @@ instance Functor Event where
 class EventPersistable a where
     hole :: a
     
-createEvent ::EventPersistable a => a -> Event a
+createEvent :: EventPersistable a => a -> Event a
 createEvent = Event
