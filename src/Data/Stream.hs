@@ -1,5 +1,9 @@
+{-# LANGUAGE ExistentialQuantification #-}
+
 module Data.Stream ( Stream
                    , StreamAction
+                   , StreamManager
+                   , fakeManager
                    , runAction
                    , createStream
                    , foldStream
@@ -10,14 +14,25 @@ where
 import Data.Event
 import Data.Foldable
 
-data StreamAction a = StreamAction { runAction :: IO a }
+data StreamAction a = StreamAction { actions :: [DbCommand], value :: a }
+data StreamManager = StreamManager
+
+
+data DbCommand = forall a . EventPersistable a => CreateStream String a
 
 instance Monad StreamAction where
-    return = StreamAction . return
-    StreamAction v >>= f =
-        StreamAction $ v >>= (runAction . f)
-      
+    return = StreamAction []
+    StreamAction oldActions value >>= f = 
+        let StreamAction newActions ret = f value in
+            StreamAction (oldActions ++ newActions) ret
+
 data Stream event = Stream { events :: [Event event] } deriving Show
+
+runAction :: StreamManager -> StreamAction a -> IO a
+runAction = undefined
+
+fakeManager :: StreamManager
+fakeManager = StreamManager
 
 createStream :: EventPersistable a => String -> a -> StreamAction (Stream a)
 createStream name e = return $ Stream [createEvent e]

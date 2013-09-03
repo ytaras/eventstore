@@ -8,7 +8,7 @@ import Data.Event
 -- | The main entry point.
 main :: IO ()
 main = 
-   runAction action >>= print
+   runAction fakeManager action >>= print
   
 
 data CounterEvent = CounterAdded Int | CounterReset deriving Show
