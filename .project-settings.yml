@@ -10,9 +10,5 @@ ghc-args: []
 modules:
   Main(src/Main.hs):
     filename: src/Main.hs
-  Data.Event:
-    filename: src/Data/Event.hs
-  Data.Stream.Persistence:
-    filename: src/Data/Stream/Persistence.hs
   Data.Stream:
     filename: src/Data/Stream.hs
