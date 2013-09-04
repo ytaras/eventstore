@@ -5,6 +5,8 @@ module Data.Stream ( createInputStream
                    , executeTransaction
                    , liftStream
                    , fakeManager
+                   , StreamTransaction
+                   , StreamPersistable
                    )
 where       
 
@@ -33,3 +35,7 @@ liftStream = undefined
 
 fakeManager :: StreamManager
 fakeManager = undefined
+
+instance Monad StreamTransaction where
+    return = undefined
+    (>>=) = undefined
